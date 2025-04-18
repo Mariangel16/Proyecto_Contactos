@@ -1,7 +1,10 @@
 package contactos;
 
 import contactos.controller.ContactManager;
+import contactos.controller.IndexManager;
+import contactos.controller.IndexManager.TipoIndice;
 import contactos.model.Contact;
+import contactos.structure.BST;
 
 import java.util.List;
 import java.util.Scanner;
@@ -23,7 +26,7 @@ public class Main {
             switch (opcion) {
                 case 1 -> gestor.mostrarContactos();
                 case 2 -> {
-                    System.out.println("\n📋 NUEVO CONTACTO");
+                    System.out.println("\n NUEVO CONTACTO");
                     System.out.print("Nombre: "); String nombre = sc.nextLine();
                     System.out.print("Apellido: "); String apellido = sc.nextLine();
                     System.out.print("Apodo: "); String apodo = sc.nextLine();
@@ -35,7 +38,7 @@ public class Main {
                     gestor.agregarContacto(nombre, apellido, apodo, telefono, email, direccion, fecha);
                 }
                 case 3 -> {
-                    System.out.println("\n🔍 BÚSQUEDA DE CONTACTO");
+                    System.out.println("\n BÚSQUEDA DE CONTACTO");
                     System.out.print("Campo a buscar (nombre, apellido, apodo, telefono, email, direccion, fecha): ");
                     String campo = sc.nextLine();
                     System.out.print("Valor a buscar: ");
@@ -43,28 +46,28 @@ public class Main {
 
                     List<Contact> resultados = gestor.buscarPorCampo(campo, valor);
                     if (resultados.isEmpty()) {
-                        System.out.println("⚠️ No se encontraron resultados.");
+                        System.out.println(" ¡¡NO SE ENCONTRARON RESULTADOS!!");
                     } else {
                         System.out.println("\n📄 RESULTADOS:");
                         for (Contact c : resultados) {
                             System.out.println(c);
-                            System.out.println("──────────────────────────────────────");
+                            System.out.println("════════════════════════════════════════════");
                         }
                     }
                 }
                 case 4 -> {
-                    System.out.print("\n🗑️ Ingrese el ID del contacto a eliminar: ");
+                    System.out.print("\n Ingrese el ID del contacto a eliminar: ");
                     int idEliminar = sc.nextInt();
                     sc.nextLine();
                     gestor.eliminarContacto(idEliminar);
                 }
                 case 5 -> {
-                    System.out.print("\n✏️ Ingrese el ID del contacto a actualizar: ");
+                    System.out.print("\n Ingrese el ID del contacto a actualizar: ");
                     int idActualizar = sc.nextInt();
                     sc.nextLine();
                     Contact existente = gestor.buscarPorId(idActualizar);
                     if (existente == null) {
-                        System.out.println("⚠️ Contacto no encontrado.");
+                        System.out.println(" ¡¡CONTACTO NO ENCONTRADO!!");
                     } else {
                         System.out.println("Deje vacío cualquier campo para conservar el valor actual.");
                         System.out.print("Nuevo Nombre [" + existente.getNombre() + "]: ");
@@ -96,8 +99,42 @@ public class Main {
                         gestor.actualizarContacto(idActualizar, actualizado);
                     }
                 }
+                case 6 -> {
+                    System.out.print("\n Campo para indexar (nombre, apellido, etc.): ");
+                    String campo = sc.nextLine();
+                    System.out.print("Tipo de índice (BST o AVL): ");
+                    String tipoTexto = sc.nextLine();
+
+                    try {
+                        TipoIndice tipo = TipoIndice.valueOf(tipoTexto.toUpperCase());
+                        BST<String> arbol = IndexManager.crearIndice(gestor.getContactos(), campo, tipo);
+                        IndexManager.guardarIndice(arbol, campo, tipo);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(" TIPO DE ÍNDICE NO VÁLIDO. USE BST o AVL.");
+                    }
+                }
+                case 7 -> {
+                    System.out.print("\n Nombre del archivo del índice (.txt): ");
+                    String nombreArchivo = sc.nextLine();
+                    System.out.print("Campo del índice (nombre, apellido, etc.): ");
+                    String campo = sc.nextLine();
+                    System.out.print("Tipo de índice (BST o AVL): ");
+                    String tipoTexto = sc.nextLine();
+
+                    try {
+                        TipoIndice tipo = TipoIndice.valueOf(tipoTexto.toUpperCase());
+                        BST<String> arbol = IndexManager.cargarIndiceDesdeArchivo(nombreArchivo, gestor.getContactos(), campo, tipo);
+                        System.out.println("IDs en el índice cargado: ");
+                        for (int id : arbol.levelOrderTraversal()) {
+                            System.out.print(id + " ");
+                        }
+                        System.out.println();
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(" TIPO DE ÍNDICE NO VÁLIDO. USE BST o AVL.");
+                    }
+                }
                 case 0 -> mostrarDespedida();
-                default -> System.out.println("❌ Opción inválida. Intente nuevamente.");
+                default -> System.out.println("OPCIÓN INVÁLIDA. INTENTA NUEVAMENTE.");
             }
 
         } while (opcion != 0);
@@ -107,35 +144,36 @@ public class Main {
 
     private static void imprimirMenu() {
         System.out.println("\n╔══════════════════════════════════════╗");
-        System.out.println("║     LIBRETA DE CONTACTOS - MENÚ      ║");
+        System.out.println("║       LIBRETA DE CONTACTOS - MENÚ    ║");
         System.out.println("╠══════════════════════════════════════╣");
         System.out.println("║ 1. Ver todos los contactos           ║");
         System.out.println("║ 2. Agregar contacto                  ║");
         System.out.println("║ 3. Buscar contacto por campo         ║");
         System.out.println("║ 4. Eliminar contacto por ID          ║");
         System.out.println("║ 5. Actualizar contacto por ID        ║");
+        System.out.println("║ 6. Crear y guardar índice            ║");
+        System.out.println("║ 7. Cargar índice desde archivo       ║");
         System.out.println("║ 0. Salir                             ║");
         System.out.println("╚══════════════════════════════════════╝");
     }
 
     private static void mostrarBienvenida() {
-        System.out.println("╔═══════════════════════════════════════════════════╗");
-        System.out.println("║                                                   ║");
-        System.out.println("║      ¡BIENVENIDO A LA LIBRETA DE CONTACTOS!       ║");
-        System.out.println("║                                                   ║");
-        System.out.println("║         Administra fácilmente tus contactos       ║");
-        System.out.println("║      personales o profesionales con búsquedas     ║");
-        System.out.println("║          rápidas, actualización dinámica y        ║");
-        System.out.println("║               respaldo en archivo CSV             ║");
-        System.out.println("║                                                   ║");
-        System.out.println("╚═══════════════════════════════════════════════════╝");
+        System.out.println("╔════════════════════════════════════════════════════╗");
+        System.out.println("║                                                    ║");
+        System.out.println("║       ¡BIENVENIDO A LA LIBRETA DE CONTACTOS!       ║");
+        System.out.println("║                                                    ║");
+        System.out.println("║        Administra fácilmente tus contactos         ║");
+        System.out.println("║        con búsquedas rápidas, actualización        ║");
+        System.out.println("║         dinámica y respaldo en archivo CSV.        ║");
+        System.out.println("║                                                    ║");
+        System.out.println("╚════════════════════════════════════════════════════╝");
         System.out.println();
     }
 
     private static void mostrarDespedida() {
         System.out.println("\n╔════════════════════════════════════════════╗");
         System.out.println("║ ¡Gracias por usar la Libreta de Contactos! ║");
-        System.out.println("║        ¡Esperamos verte pronto!            ║");
+        System.out.println("║          ¡Esperamos verte pronto! :D       ║");
         System.out.println("╚════════════════════════════════════════════╝");
     }
 }

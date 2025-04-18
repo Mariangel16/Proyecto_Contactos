@@ -109,4 +109,9 @@ public class ContactManager {
     private void guardar() {
         CSVUtils.guardarContactos(contactos, rutaArchivo);
     }
+
+    public List<Contact> getContactos() {
+        return contactos;
+    }
+
 }

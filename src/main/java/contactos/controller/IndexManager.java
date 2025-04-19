@@ -54,7 +54,7 @@ public class IndexManager {
             for (int id : ids) {
                 writer.write(id + "\n");
             }
-            System.out.println("✅ Índice guardado en: " + nombreArchivo);
+            System.out.println(" Índice guardado en: " + nombreArchivo);
         } catch (IOException e) {
             System.err.println("Error al guardar el índice: " + e.getMessage());
         }
@@ -79,11 +79,11 @@ public class IndexManager {
                         }
                     }
                 } catch (NumberFormatException e) {
-                    System.err.println("❌ Línea inválida en archivo: " + linea);
+                    System.err.println(" Línea inválida en archivo: " + linea);
                 }
             }
 
-            System.out.println("✅ Índice reconstruido desde archivo: " + nombreArchivo);
+            System.out.println(" Índice reconstruido desde archivo: " + nombreArchivo);
         } catch (IOException e) {
             System.err.println("⚠️ Error al leer el archivo: " + e.getMessage());
         }

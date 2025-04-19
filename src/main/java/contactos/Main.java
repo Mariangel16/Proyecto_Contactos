@@ -48,7 +48,7 @@ public class Main {
                     if (resultados.isEmpty()) {
                         System.out.println(" ¡¡NO SE ENCONTRARON RESULTADOS!!");
                     } else {
-                        System.out.println("\n📄 RESULTADOS:");
+                        System.out.println("\n RESULTADOS:");
                         for (Contact c : resultados) {
                             System.out.println(c);
                             System.out.println("════════════════════════════════════════════");

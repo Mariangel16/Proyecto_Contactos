@@ -8,7 +8,8 @@ import java.util.List;
 
 public class ContactManager {
     private List<Contact> contactos;
-    private final String rutaArchivo = "src/main/resources/contacts.csv";
+    //para poner la ruta del archivo .CSV
+    private final String rutaArchivo = "src/main/resources/contactss.csv";
     private int ultimoId = 0;
 
     public ContactManager() {

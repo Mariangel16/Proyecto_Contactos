@@ -63,7 +63,7 @@ public class ContactManager {
         } else {
             for (Contact c : contactos) {
                 System.out.println(c);
-                System.out.println("---------------------------");
+                System.out.println("════════════════════════════════════════════════════════════════════════════");
             }
         }
     }

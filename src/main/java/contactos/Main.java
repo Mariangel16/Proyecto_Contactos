@@ -16,6 +16,13 @@ public class Main {
         int opcion;
 
         mostrarBienvenida();
+        System.out.println("Presiona ENTER para continuar...");
+        sc.nextLine(); //  pausa antes de mostrar el menú
+
+        // Limpiar pantalla simulada
+        for (int i = 0; i < 50; i++) {
+            System.out.println();
+        }
 
         do {
             imprimirMenu();
@@ -169,6 +176,7 @@ public class Main {
         System.out.println("╚════════════════════════════════════════════════════╝");
         System.out.println();
     }
+
 
     private static void mostrarDespedida() {
         System.out.println("\n╔════════════════════════════════════════════╗");

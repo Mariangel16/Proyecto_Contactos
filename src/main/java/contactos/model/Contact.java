@@ -100,21 +100,25 @@ public class Contact {
                 telefono + "," + email + "," + direccion + "," + fechaNacimiento;
     }
 
-    // Método para crear Contact desde una línea CSV
-    public static Contact fromCSV(String lineaCSV) {
-        String[] datos = lineaCSV.split(",");
-        if (datos.length != 8) {
-            throw new IllegalArgumentException("Formato CSV inválido");
+    public static Contact fromCSV(String linea) {
+        String[] partes = linea.split(",", -1); // -1 para incluir campos vacíos si hay
+
+        if (partes.length < 8) {
+            throw new IllegalArgumentException("Línea CSV inválida: " + linea);
         }
+
+        int id = Integer.parseInt(partes[0].trim());
+
         return new Contact(
-                Integer.parseInt(datos[0]),
-                datos[1],
-                datos[2],
-                datos[3],
-                datos[4],
-                datos[5],
-                datos[6],
-                datos[7]
+                id,
+                partes[1].trim(), // nombre
+                partes[2].trim(), // apellido
+                partes[3].trim(), // apodo
+                partes[4].trim(), // teléfono
+                partes[5].trim(), // email
+                partes[6].trim(), // dirección
+                partes[7].trim()  // fecha de nacimiento
         );
     }
+
 }

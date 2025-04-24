@@ -8,13 +8,10 @@ import java.util.List;
 
 public class ContactManager {
     private List<Contact> contactos;
-    //para poner la ruta del archivo .CSV
-    private final String rutaArchivo = "src/main/resources/contactss.csv";
     private int ultimoId = 0;
 
     public ContactManager() {
-        contactos = CSVUtils.cargarContactos(rutaArchivo);
-        calcularUltimoId();
+        contactos = new ArrayList<>(); // Ya no se cargan contactos automáticamente
     }
 
     private void calcularUltimoId() {
@@ -30,14 +27,12 @@ public class ContactManager {
         int nuevoId = ++ultimoId;
         Contact nuevo = new Contact(nuevoId, nombre, apellido, apodo, telefono, email, direccion, fechaNacimiento);
         contactos.add(nuevo);
-        guardar();
         System.out.println("Contacto agregado con ID: " + nuevoId);
     }
 
     public void eliminarContacto(int id) {
         boolean eliminado = contactos.removeIf(c -> c.getId() == id);
         if (eliminado) {
-            guardar();
             System.out.println("Contacto eliminado.");
         } else {
             System.out.println("No se encontró contacto con ID " + id);
@@ -47,9 +42,8 @@ public class ContactManager {
     public void actualizarContacto(int id, Contact nuevosDatos) {
         for (int i = 0; i < contactos.size(); i++) {
             if (contactos.get(i).getId() == id) {
-                nuevosDatos.setId(id); // conservar el mismo ID
+                nuevosDatos.setId(id);
                 contactos.set(i, nuevosDatos);
-                guardar();
                 System.out.println("Contacto actualizado.");
                 return;
             }
@@ -70,9 +64,7 @@ public class ContactManager {
 
     public Contact buscarPorId(int id) {
         for (Contact c : contactos) {
-            if (c.getId() == id) {
-                return c;
-            }
+            if (c.getId() == id) return c;
         }
         return null;
     }
@@ -81,38 +73,43 @@ public class ContactManager {
         List<Contact> resultados = new ArrayList<>();
         for (Contact c : contactos) {
             switch (campo.toLowerCase()) {
-                case "nombre":
+                case "nombre" -> {
                     if (c.getNombre().equalsIgnoreCase(valor)) resultados.add(c);
-                    break;
-                case "apellido":
+                }
+                case "apellido" -> {
                     if (c.getApellido().equalsIgnoreCase(valor)) resultados.add(c);
-                    break;
-                case "apodo":
+                }
+                case "apodo" -> {
                     if (c.getApodo().equalsIgnoreCase(valor)) resultados.add(c);
-                    break;
-                case "telefono":
+                }
+                case "telefono" -> {
                     if (c.getTelefono().equalsIgnoreCase(valor)) resultados.add(c);
-                    break;
-                case "email":
+                }
+                case "email" -> {
                     if (c.getEmail().equalsIgnoreCase(valor)) resultados.add(c);
-                    break;
-                case "direccion":
+                }
+                case "direccion" -> {
                     if (c.getDireccion().equalsIgnoreCase(valor)) resultados.add(c);
-                    break;
-                case "fecha":
+                }
+                case "fecha" -> {
                     if (c.getFechaNacimiento().equalsIgnoreCase(valor)) resultados.add(c);
-                    break;
+                }
             }
         }
         return resultados;
     }
 
-    private void guardar() {
-        CSVUtils.guardarContactos(contactos, rutaArchivo);
+    // Puedes usar esto desde la opción 8 (exportar contactos a CSV)
+    public void guardarEnArchivo(String rutaDestino) {
+        CSVUtils.guardarContactos(contactos, rutaDestino);
     }
 
     public List<Contact> getContactos() {
         return contactos;
     }
 
+    public void agregarContactos(List<Contact> nuevos) {
+        contactos.addAll(nuevos);
+        calcularUltimoId(); // recalcular ID para que los nuevos agregados no se dupliquen
+    }
 }

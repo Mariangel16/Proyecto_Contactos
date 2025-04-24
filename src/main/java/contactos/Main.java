@@ -5,6 +5,8 @@ import contactos.controller.IndexManager;
 import contactos.controller.IndexManager.TipoIndice;
 import contactos.model.Contact;
 import contactos.structure.BST;
+import contactos.utils.CSVUtils;
+
 
 import java.util.List;
 import java.util.Scanner;
@@ -115,13 +117,17 @@ public class Main {
                     try {
                         TipoIndice tipo = TipoIndice.valueOf(tipoTexto.toUpperCase());
                         BST<String> arbol = IndexManager.crearIndice(gestor.getContactos(), campo, tipo);
-                        IndexManager.guardarIndice(arbol, campo, tipo);
+
+                        System.out.print("Ruta para guardar el archivo .txt (ej: C:\\Users\\maria\\Escritorio\\indice.txt): ");
+                        String ruta = sc.nextLine();
+
+                        IndexManager.guardarIndice(arbol, ruta);
                     } catch (IllegalArgumentException e) {
                         System.out.println(" TIPO DE ÍNDICE NO VÁLIDO. USE BST o AVL.");
                     }
                 }
                 case 7 -> {
-                    System.out.print("\n Nombre del archivo del índice (.txt): ");
+                    System.out.print("\n Ruta completa del archivo del índice (.txt): ");
                     String nombreArchivo = sc.nextLine();
                     System.out.print("Campo del índice (nombre, apellido, etc.): ");
                     String campo = sc.nextLine();
@@ -131,7 +137,7 @@ public class Main {
                     try {
                         TipoIndice tipo = TipoIndice.valueOf(tipoTexto.toUpperCase());
                         BST<String> arbol = IndexManager.cargarIndiceDesdeArchivo(nombreArchivo, gestor.getContactos(), campo, tipo);
-                        System.out.println("IDs en el índice cargado: ");
+                        System.out.println("IDs en el índice cargado:");
                         for (int id : arbol.levelOrderTraversal()) {
                             System.out.print(id + " ");
                         }
@@ -139,7 +145,21 @@ public class Main {
                     } catch (IllegalArgumentException e) {
                         System.out.println(" TIPO DE ÍNDICE NO VÁLIDO. USE BST o AVL.");
                     }
+            }
+                case 8 -> {
+                    System.out.print("Ingrese la ruta y nombre del archivo CSV (ej: C:\\Users\\maria\\Escritorio\\mis-contactos.csv): ");
+                    String ruta = sc.nextLine();
+                    CSVUtils.guardarContactos(gestor.getContactos(), ruta);
                 }
+
+                case 9 -> {
+                    System.out.print("Ingrese la ruta del archivo CSV: ");
+                    String ruta = sc.nextLine();
+                    List<Contact> nuevos = CSVUtils.importarContactos(ruta);
+                    gestor.agregarContactos(nuevos);
+                    System.out.println(" Contactos importados correctamente: " + nuevos.size());
+                }
+
                 case 0 -> mostrarDespedida();
                 default -> System.out.println("OPCIÓN INVÁLIDA. INTENTA NUEVAMENTE.");
             }
@@ -160,6 +180,8 @@ public class Main {
         System.out.println("║ 5. Actualizar contacto por ID        ║");
         System.out.println("║ 6. Crear y guardar índice            ║");
         System.out.println("║ 7. Cargar índice desde archivo       ║");
+        System.out.println("║ 8. Exportar contactos a archivo CSV  ║");
+        System.out.println("║ 9. Importar contactos desde CSV      ║");
         System.out.println("║ 0. Salir                             ║");
         System.out.println("╚══════════════════════════════════════╝");
     }

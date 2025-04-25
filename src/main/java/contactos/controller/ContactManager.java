@@ -6,14 +6,25 @@ import contactos.utils.CSVUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase encargada de gestionar una lista de contactos.
+ * Permite agregar, eliminar, actualizar, buscar y exportar contactos.
+ */
 public class ContactManager {
-    private List<Contact> contactos;
-    private int ultimoId = 0;
+    private List<Contact> contactos; // Lista que almacena los contactos
+    private int ultimoId = 0; // Último ID asignado, se incrementa automáticamente
 
+    /**
+     * Constructor: inicializa la lista sin cargar contactos automáticamente.
+     */
     public ContactManager() {
         contactos = new ArrayList<>(); // Ya no se cargan contactos automáticamente
     }
 
+    /**
+     * Recorre los contactos y determina cuál es el ID más alto.
+     * Se utiliza para asegurar que no se repitan IDs al agregar nuevos contactos.
+     */
     private void calcularUltimoId() {
         for (Contact c : contactos) {
             if (c.getId() > ultimoId) {
@@ -22,16 +33,22 @@ public class ContactManager {
         }
     }
 
+    /**
+     * Agrega un nuevo contacto con un ID único autogenerado.
+     */
     public void agregarContacto(String nombre, String apellido, String apodo, String telefono,
                                 String email, String direccion, String fechaNacimiento) {
-        int nuevoId = ++ultimoId;
+        int nuevoId = ++ultimoId; // Genera un nuevo ID incrementado
         Contact nuevo = new Contact(nuevoId, nombre, apellido, apodo, telefono, email, direccion, fechaNacimiento);
         contactos.add(nuevo);
         System.out.println("Contacto agregado con ID: " + nuevoId);
     }
 
+    /**
+     * Elimina un contacto según su ID.
+     */
     public void eliminarContacto(int id) {
-        boolean eliminado = contactos.removeIf(c -> c.getId() == id);
+        boolean eliminado = contactos.removeIf(c -> c.getId() == id); // Elimina el contacto con el ID dado
         if (eliminado) {
             System.out.println("Contacto eliminado.");
         } else {
@@ -39,11 +56,14 @@ public class ContactManager {
         }
     }
 
+    /**
+     * Actualiza un contacto existente con nuevos datos, conservando su ID.
+     */
     public void actualizarContacto(int id, Contact nuevosDatos) {
         for (int i = 0; i < contactos.size(); i++) {
             if (contactos.get(i).getId() == id) {
-                nuevosDatos.setId(id);
-                contactos.set(i, nuevosDatos);
+                nuevosDatos.setId(id); // Asegura que el ID no cambie
+                contactos.set(i, nuevosDatos); // Reemplaza el contacto viejo con el nuevo
                 System.out.println("Contacto actualizado.");
                 return;
             }
@@ -51,6 +71,9 @@ public class ContactManager {
         System.out.println("No se encontró contacto con ID " + id);
     }
 
+    /**
+     * Muestra todos los contactos en consola con separadores visuales.
+     */
     public void mostrarContactos() {
         if (contactos.isEmpty()) {
             System.out.println("No hay contactos registrados.");
@@ -62,6 +85,9 @@ public class ContactManager {
         }
     }
 
+    /**
+     * Busca un contacto por su ID y lo retorna, o null si no existe.
+     */
     public Contact buscarPorId(int id) {
         for (Contact c : contactos) {
             if (c.getId() == id) return c;
@@ -69,6 +95,10 @@ public class ContactManager {
         return null;
     }
 
+    /**
+     * Busca contactos que coincidan con un valor específico en un campo determinado.
+     * Los campos válidos son: nombre, apellido, apodo, telefono, email, direccion, fecha.
+     */
     public List<Contact> buscarPorCampo(String campo, String valor) {
         List<Contact> resultados = new ArrayList<>();
         for (Contact c : contactos) {
@@ -99,17 +129,26 @@ public class ContactManager {
         return resultados;
     }
 
-    // Puedes usar esto desde la opción 8 (exportar contactos a CSV)
+    /**
+     * Exporta la lista de contactos a un archivo CSV en la ruta indicada.
+     */
     public void guardarEnArchivo(String rutaDestino) {
         CSVUtils.guardarContactos(contactos, rutaDestino);
     }
 
+    /**
+     * Retorna la lista completa de contactos.
+     */
     public List<Contact> getContactos() {
         return contactos;
     }
 
+    /**
+     * Agrega una lista de contactos (por ejemplo, al importar desde un archivo).
+     * También recalcula el último ID para evitar conflictos al agregar nuevos.
+     */
     public void agregarContactos(List<Contact> nuevos) {
         contactos.addAll(nuevos);
-        calcularUltimoId(); // recalcular ID para que los nuevos agregados no se dupliquen
+        calcularUltimoId(); // Asegura que el siguiente ID sea correcto
     }
 }

@@ -13,7 +13,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        ContactManager gestor = new ContactManager();
+        ContactManager gestor = new ContactManager(); // Gestor principal de contactos
         Scanner sc = new Scanner(System.in);
         int opcion;
 

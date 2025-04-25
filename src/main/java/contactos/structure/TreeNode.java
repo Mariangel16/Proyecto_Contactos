@@ -20,11 +20,9 @@ public class TreeNode<T extends Comparable<T>> {
     // Altura del nodo, usada en árboles AVL para mantener el balance
     public int height;
 
-    /**
-     * Constructor del nodo.
-     * @param key Clave con la que se ordenará el nodo.
-     * @param id Identificador único asociado al nodo.
-     */
+     //Constructor del nodo.
+     // key con la que se ordenará el nodo.
+     // Identificador único asociado al nodo.
     public TreeNode(T key, int id) {
         this.key = key;       // Se asigna la clave
         this.id = id;         // Se asigna el ID

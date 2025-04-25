@@ -1,6 +1,10 @@
 package contactos.model;
 
+
+ //Clase que representa un contacto dentro del sistema.
+ // Contiene información personal como nombre, apodo, teléfono, etc.
 public class Contact {
+    // Atributos privados del contacto
     private int id;
     private String nombre;
     private String apellido;
@@ -10,6 +14,8 @@ public class Contact {
     private String direccion;
     private String fechaNacimiento;
 
+     //Constructor principal del contacto.
+     //Inicializa todos los campos del contacto con los valores proporcionados.
     public Contact(int id, String nombre, String apellido, String apodo,
                    String telefono, String email, String direccion, String fechaNacimiento) {
         this.id = id;
@@ -22,7 +28,8 @@ public class Contact {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    // Getters y Setters
+    // Métodos Getter y Setter para acceder y modificar los atributos de forma controlada.
+
     public int getId() {
         return id;
     }
@@ -87,28 +94,39 @@ public class Contact {
         this.fechaNacimiento = fechaNacimiento;
     }
 
+     // Método sobrescrito para mostrar la información del contacto de forma legible.
+     //Se utiliza al imprimir el objeto en consola o al mostrarlo al usuario.
+
     @Override
     public String toString() {
         return "Contacto #" + id + " - " + nombre + " " + apellido + " (" + apodo + ")\n" +
                 "Teléfono: " + telefono + " | Email: " + email + "\n" +
                 "Dirección: " + direccion + " | Fecha Nacimiento: " + fechaNacimiento;
     }
+     //Convierte el objeto Contact a una línea de texto en formato CSV.
 
-    // Método para convertir a línea CSV
     public String toCSV() {
         return id + "," + nombre + "," + apellido + "," + apodo + "," +
                 telefono + "," + email + "," + direccion + "," + fechaNacimiento;
     }
 
-    public static Contact fromCSV(String linea) {
-        String[] partes = linea.split(",", -1); // -1 para incluir campos vacíos si hay
 
+     //Método estático para crear un objeto Contact a partir de una línea CSV.
+     //Se espera que los valores estén separados por comas.
+     // param linea Línea leída del archivo CSV.
+     // return Objeto Contact creado a partir de los datos.
+
+    public static Contact fromCSV(String linea) {
+        String[] partes = linea.split(",", -1); // -1 asegura que se incluyan campos vacíos
+
+        // Validación básica de longitud
         if (partes.length < 8) {
             throw new IllegalArgumentException("Línea CSV inválida: " + linea);
         }
 
-        int id = Integer.parseInt(partes[0].trim());
+        int id = Integer.parseInt(partes[0].trim()); // Conversión del ID a entero
 
+        // Retorna el nuevo objeto Contact usando los valores extraídos
         return new Contact(
                 id,
                 partes[1].trim(), // nombre
@@ -120,5 +138,4 @@ public class Contact {
                 partes[7].trim()  // fecha de nacimiento
         );
     }
-
 }
